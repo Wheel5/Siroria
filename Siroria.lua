@@ -4,7 +4,7 @@ local Siroria = Siroria
 local EM		= GetEventManager()
 
 Siroria.name		= "Siroria"
-Siroria.version		= "1.1.1"
+Siroria.version		= "1.2.1"
 Siroria.varVersion 	= "1"
 
 Siroria.IDs 		= {
@@ -42,6 +42,7 @@ Siroria.defaults		= {
 	["COLORS"]		= Siroria.COLORS,
 	["showStacks"]		= true,
 	["showStackTimer"]	= true,
+	["stayGoNoti"]		= false,
 }
 
 function Siroria.setPos()
@@ -114,12 +115,15 @@ function Siroria.getStacks()
 		local _,_,timeEnding,_,stackCount,_,_,_,_,_,abilityID = GetUnitBuffInfo("player", i)
 		if Siroria.boonIDs[abilityID] then
 			SiroriaFrameStacks:SetText(stackCount)
-			if ( Siroria.time(timeEnding) > Siroria.time(Siroria.downTime) ) then
-				SiroriaFrameStackTime:SetText("Move")
+			if Siroria.savedVars.stayGoNoti then
+				if ( Siroria.time(timeEnding) > Siroria.time(Siroria.downTime) ) then
+					SiroriaFrameStackTime:SetText("Move")
+				else
+					SiroriaFrameStackTime:SetText("Stay")
+				end
 			else
-				SiroriaFrameStackTime:SetText("Stay")
+				SiroriaFrameStackTime:SetText(string.format("%.1f", Siroria.time(timeEnding)))
 			end
-			--SiroriaFrameStackTime:SetText(string.format("%.1f", Siroria.time(timeEnding)))
 			break
 		elseif i > numBuffs then
 			SiroriaFrameStacks:SetText("0")

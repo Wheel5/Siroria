@@ -4,13 +4,17 @@ local Siroria = Siroria
 function Siroria.setupMenu()
 	local LAM = LibStub("LibAddonMenu-2.0")
 
+	local lockUI		= true
+	-- local positionGuard	= false
+	-- local circleGuard	= true
+
 	local panelData = {
 		type = "panel",
 		name = Siroria.name,
 		displayName = "|cff5938S|riroria",
 		author = "Wheels",
 		version = ""..Siroria.version,
-		--registerForRefresh = true
+		registerForRefresh = true
 	}
 
 	LAM:RegisterAddonPanel(Siroria.name.."Options", panelData)
@@ -24,21 +28,41 @@ function Siroria.setupMenu()
 			type = "checkbox",
 			name = "Lock UI",
 			tooltip = "Unlock to position timer in desired location",
-			getFunc = function() return true end,
+			getFunc = function() return lockUI end,
 			setFunc = function(value)
 				if not value then
 					EVENT_MANAGER:UnregisterForEvent(Siroria.name.."Hide", EVENT_RETICLE_HIDDEN_UPDATE)
 					SiroriaFrame:SetHidden(false)
 					SiroriaFrame:SetMovable(true)
 					SiroriaFrame:SetMouseEnabled(true)
+					lockUI = false
+					--positionGuard = true
 				else
 					EVENT_MANAGER:RegisterForEvent(Siroria.name.."Hide", EVENT_RETICLE_HIDDEN_UPDATE, Siroria.hideFrame)
 					SiroriaFrame:SetHidden(IsReticleHidden())
 					SiroriaFrame:SetMovable(false)
 					SiroriaFrame:SetMouseEnabled(false)
+					lockUI = true
+					--positionGuard = false
 				end
 			end
 		},
+		--{
+		--	type = "checkbox",
+		--	name = "Lock Circle Timer",
+		--	tooltip = "Unlock to position timer in desired location",
+		--	disabled = function() return not positionGuard end,
+		--	getFunc = function() return circleGuard end,
+		--	setFunc = function(value)
+		--		if not value then
+		--			SiroriaFrameTime:SetMovable(true)
+		--			SiroriaFrameTime:SetMouseEnabled(true)
+		--		else
+		--			SiroriaFrameTime:SetMovable(false)
+		--			SiroriaFrameTime:SetMouseEnabled(false)
+		--		end
+		--	end
+		--},
 		{
 			type = "header",
 			name = "Options"
@@ -83,6 +107,15 @@ function Siroria.setupMenu()
 			setFunc = function(value)
 				Siroria.savedVars.showStackTimer = value
 				SiroriaFrameStackTime:SetHidden(not value)
+			end
+		},
+		{
+			type = "checkbox",
+			name = "Stay/Move Display",
+			tooltip = "Replaces the stack timer with text saying whether is it safe to move or not, based on how much time is remaining on proc vs stack (thanks Iceman!)",
+			getFunc = function() return Siroria.savedVars.stayGoNoti end,
+			setFunc = function(value)
+				Siroria.savedVars.stayGoNoti = value
 			end
 		},
 		{

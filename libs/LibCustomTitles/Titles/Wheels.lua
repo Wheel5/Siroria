@@ -15,6 +15,6 @@ MY_MODULE:RegisterTitle("@Wheel5", nil, 2079, {en = "Immortal Memer"}, {color={"
 MY_MODULE:RegisterTitle("@Wheel5", nil, 2136, {en = "Bringer of Light"}, {color={"#5625F7","#B825F7"}})
 MY_MODULE:RegisterTitle("@Mapurr", nil, 92, {en = "Cartographer"}, {color={"#AD99F7", "#9DDCE8"}})
 MY_MODULE:RegisterTitle("@Mapurr", nil, 2075, {en = "Cartographer"}, {color={"#AD99F7", "#9DDCE8"}})
--- MY_MODULE:RegisterTitle("@Inig0", nil, 92, {en = "Señor"}, {color="#FA8072"})
 MY_MODULE:RegisterTitle("@RTG1", nil, 1330, {en = "Poggers"}, {color="#3D992D"})
+MY_MODULE:RegisterTitle("@LikoXie", nil, 2139, {en = "Ice Poseidon"}, {color="#00FFFF"})
 
