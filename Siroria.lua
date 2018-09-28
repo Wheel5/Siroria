@@ -4,7 +4,7 @@ local Siroria = Siroria
 local EM		= GetEventManager()
 
 Siroria.name		= "Siroria"
-Siroria.version		= "1.2.2"
+Siroria.version		= "1.3.2"
 Siroria.varVersion 	= "1"
 
 Siroria.IDs 		= {
@@ -34,6 +34,21 @@ Siroria.COLORS = {
 	},
 }
 
+Siroria.SLOTS = {
+	[1] = EQUIP_SLOT_CHEST,
+	[2] = EQUIP_SLOT_FEET,
+	[3] = EQUIP_SLOT_HANDS,
+	[4] = EQUIP_SLOT_HEAD,
+	[5] = EQUIP_SLOT_LEGS,
+	[6] = EQUIP_SLOT_NECK,
+	[7] = EQUIP_SLOT_RING1,
+	[8] = EQUIP_SLOT_RING2,
+	[9] = EQUIP_SLOT_SHOULDERS,
+	[10] = EQUIP_SLOT_WAIST,
+	[11] = EQUIP_SLOT_MAIN_HAND,	-- only accounting for staves
+	[12] = EQUIP_SLOT_BACKUP_MAIN,
+}
+
 Siroria.defaults		= {
 	["offsetX"]		= 500,
 	["offsetY"]		= 500,
@@ -56,7 +71,39 @@ function Siroria.savePos()
 	Siroria.savedVars.offsetY = SiroriaFrame:GetTop()
 end
 
+function Siroria.equipCheck()
+	np = 0
+	p = 0
+	for _,slot in pairs(Siroria.SLOTS) do
+		if string.find(GetItemName(BAG_WORN, slot), "Siroria's Perfect") then
+			if (slot == EQUIP_SLOT_MAIN_HAND) or (slot == EQUIP_SLOT_BACKUP_MAIN) then p = p + 2 else p = p + 1 end
+		elseif string.find(GetItemName(BAG_WORN, slot), "Siroria") then
+			if (slot == EQUIP_SLOT_MAIN_HAND) or (slot == EQUIP_SLOT_BACKUP_MAIN) then np = np + 2 else np = np + 1 end
+		end
+		if (np >= 5) or (p >= 5) then return true end
+	end
+	return false
+end
+
+function Siroria.gearUpdate()
+	if Siroria.equipCheck() then
+		Siroria.hideFrame()
+		EM:RegisterForEvent(Siroria.name.."Hide", EVENT_RETICLE_HIDDEN_UPDATE, Siroria.hideFrame)
+		EM:RegisterForEvent(Siroria.name.."CombatState", EVENT_PLAYER_COMBAT_STATE, Siroria.combatState)
+
+		EM:RegisterForEvent(Siroria.name.."ECE", EVENT_COMBAT_EVENT, Siroria.combatEvent)
+		EM:AddFilterForEvent(Siroria.name.."ECE", EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_EFFECT_GAINED)
+	else
+		SiroriaFrame:SetHidden(true)
+		EM:UnregisterForEvent(Siroria.name.."Hide", EVENT_RETICLE_HIDDEN_UPDATE, Siroria.hideFrame)
+		EM:UnregisterForEvent(Siroria.name.."CombatState", EVENT_PLAYER_COMBAT_STATE, Siroria.combatState)
+
+		EM:UnregisterForEvent(Siroria.name.."ECE", EVENT_COMBAT_EVENT, Siroria.combatEvent)
+	end
+end
+
 function Siroria.combatState()
+	if not Siroria.equipCheck() then return end
 	Siroria.hideOutOfCombat()
 	Siroria.stackHandler()
 end
@@ -155,12 +202,10 @@ function Siroria.Init(event, addon)
 	Siroria.setupMenu()
 	Siroria.hideOutOfCombat()
 
-	EM:RegisterForEvent(Siroria.name.."Hide", EVENT_RETICLE_HIDDEN_UPDATE, Siroria.hideFrame)
-	EM:RegisterForEvent(Siroria.name.."CombatState", EVENT_PLAYER_COMBAT_STATE, Siroria.combatState)
+	Siroria.gearUpdate()
 
-	EM:RegisterForEvent(Siroria.name.."ECE", EVENT_COMBAT_EVENT, Siroria.combatEvent)
-	EM:AddFilterForEvent(Siroria.name.."ECE", EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_EFFECT_GAINED)
-
+	EM:RegisterForEvent(Siroria.name.."GearUpdate", EVENT_INVENTORY_SINGLE_SLOT_UPDATE, Siroria.gearUpdate)
+	EM:AddFilterForEvent(Siroria.name.."GearUpdate", EVENT_INVENTORY_SINGLE_SLOT_UPDATE, REGISTER_FILTER_BAG_ID, BAG_WORN)
 end
 
 EM:RegisterForEvent(Siroria.name.."Load", EVENT_ADD_ON_LOADED, Siroria.Init)
