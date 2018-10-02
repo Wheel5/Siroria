@@ -4,7 +4,7 @@ local Siroria = Siroria
 local EM		= GetEventManager()
 
 Siroria.name		= "Siroria"
-Siroria.version		= "1.3.2"
+Siroria.version		= "1.3.3"
 Siroria.varVersion 	= "1"
 
 Siroria.IDs 		= {
@@ -37,7 +37,7 @@ Siroria.COLORS = {
 Siroria.SLOTS = {
 	[1] = EQUIP_SLOT_CHEST,
 	[2] = EQUIP_SLOT_FEET,
-	[3] = EQUIP_SLOT_HANDS,
+	[3] = EQUIP_SLOT_HAND,
 	[4] = EQUIP_SLOT_HEAD,
 	[5] = EQUIP_SLOT_LEGS,
 	[6] = EQUIP_SLOT_NECK,
