@@ -4,7 +4,7 @@ local Siroria = Siroria
 local EM		= GetEventManager()
 
 Siroria.name		= "Siroria"
-Siroria.version		= "1.3.3"
+Siroria.version		= "1.3.4"
 Siroria.varVersion 	= "1"
 
 Siroria.IDs 		= {
@@ -34,19 +34,9 @@ Siroria.COLORS = {
 	},
 }
 
-Siroria.SLOTS = {
-	[1] = EQUIP_SLOT_CHEST,
-	[2] = EQUIP_SLOT_FEET,
-	[3] = EQUIP_SLOT_HAND,
-	[4] = EQUIP_SLOT_HEAD,
-	[5] = EQUIP_SLOT_LEGS,
-	[6] = EQUIP_SLOT_NECK,
-	[7] = EQUIP_SLOT_RING1,
-	[8] = EQUIP_SLOT_RING2,
-	[9] = EQUIP_SLOT_SHOULDERS,
-	[10] = EQUIP_SLOT_WAIST,
-	[11] = EQUIP_SLOT_MAIN_HAND,	-- only accounting for staves
-	[12] = EQUIP_SLOT_BACKUP_MAIN,
+Siroria.TYPES = {
+	[1] = "|H1:item:138329:364:50:45884:370:50:0:0:0:0:0:0:0:0:1:73:0:1:0:0:0|h|h",	-- perfect
+	[2] = "|H1:item:137161:362:50:0:0:0:0:0:0:0:0:0:0:0:1:73:0:1:0:300:0|h|h",	-- non perfect
 }
 
 Siroria.defaults		= {
@@ -72,16 +62,10 @@ function Siroria.savePos()
 end
 
 function Siroria.equipCheck()
-	np = 0
-	p = 0
-	for _,slot in pairs(Siroria.SLOTS) do
-		if string.find(GetItemName(BAG_WORN, slot), "Siroria's Perfect") then
-			if (slot == EQUIP_SLOT_MAIN_HAND) or (slot == EQUIP_SLOT_BACKUP_MAIN) then p = p + 2 else p = p + 1 end
-		elseif string.find(GetItemName(BAG_WORN, slot), "Siroria") then
-			if (slot == EQUIP_SLOT_MAIN_HAND) or (slot == EQUIP_SLOT_BACKUP_MAIN) then np = np + 2 else np = np + 1 end
-		end
-		if (np >= 5) or (p >= 5) then return true end
-	end
+	local np, p = 0
+	_,_,_,p = GetItemLinkSetInfo(Siroria.TYPES[1], true)
+	_,_,_,np = GetItemLinkSetInfo(Siroria.TYPES[2], true)
+	if (np >= 5) or (p >= 5) then return true end
 	return false
 end
 
