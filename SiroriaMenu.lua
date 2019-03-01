@@ -38,10 +38,10 @@ function Siroria.setupMenu()
 					lockUI = false
 					--positionGuard = true
 				else
-					EVENT_MANAGER:RegisterForEvent(Siroria.name.."Hide", EVENT_RETICLE_HIDDEN_UPDATE, Siroria.hideFrame)
 					SiroriaFrame:SetHidden(IsReticleHidden())
 					SiroriaFrame:SetMovable(false)
 					SiroriaFrame:SetMouseEnabled(false)
+					Siroria.gearUpdate()
 					lockUI = true
 					--positionGuard = false
 				end
