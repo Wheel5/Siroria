@@ -4,7 +4,7 @@ local Siroria = Siroria
 local EM		= GetEventManager()
 
 Siroria.name		= "Siroria"
-Siroria.version		= "1.5.0"
+Siroria.version		= "1.6.0"
 Siroria.varVersion 	= "1"
 
 Siroria.IDs 		= {
@@ -65,7 +65,7 @@ function Siroria.equipCheck()
 	local np, p = 0
 	_,_,_,p = GetItemLinkSetInfo(Siroria.TYPES[1], true)
 	_,_,_,np = GetItemLinkSetInfo(Siroria.TYPES[2], true)
-	if (np >= 5) or (p >= 5) then return true end
+	if (np >= 3) or (p >= 3) then return true end
 	return false
 end
 
@@ -77,6 +77,7 @@ function Siroria.gearUpdate()
 
 		EM:RegisterForEvent(Siroria.name.."ECE", EVENT_COMBAT_EVENT, Siroria.combatEvent)
 		EM:AddFilterForEvent(Siroria.name.."ECE", EVENT_COMBAT_EVENT, REGISTER_FILTER_COMBAT_RESULT, ACTION_RESULT_EFFECT_GAINED)
+		EM:AddFilterForEvent(Siroria.name.."ECE", EVENT_COMBAT_EVENT, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
 	else
 		SiroriaFrame:SetHidden(true)
 		EM:UnregisterForEvent(Siroria.name.."Hide", EVENT_RETICLE_HIDDEN_UPDATE, Siroria.hideFrame)
@@ -132,7 +133,7 @@ function Siroria.time(nd)
 end
 
 function Siroria.combatEvent(_, _, _, _, _, _, sourceName, _, _, _, _, _, _, _, _, _, abilityID)
-	if Siroria.IDs[abilityID] and zo_strformat(SI_UNIT_NAME, sourceName) == zo_strformat(SI_UNIT_NAME, GetUnitName("player")) then
+	if Siroria.IDs[abilityID] then
 		EM:RegisterForUpdate(Siroria.name.."Update", Siroria.UPDATE_INTERVAL, Siroria.countDown)
 		Siroria.downTime = GetGameTimeMilliseconds()/1000 + 10	-- 10 seconds after siroria procs
 		SiroriaFrameTime:SetColor(unpack(Siroria.savedVars.COLORS.DOWN))

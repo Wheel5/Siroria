@@ -1,7 +1,7 @@
 ## Title: |cff5938S|riroria
 ## Description: Tracks your Siroria circle proc and stack count
 ## Author: Wheels
-## Version: 1.5.0
+## Version: 1.6.0
 ## APIVersion: 100026
 ## SavedVariables: SiroriaSavedVars
 ## OptionalDependsOn: LibAddonMenu-2.0 LibStub
